@@ -6,7 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "api/test.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     },
     {
@@ -17,19 +17,19 @@
   "routes": [
     {
       "src": "/api/test",
-      "dest": "api/test.js"
+      "dest": "/api/test.js"
     },
     {
       "src": "/api/diag",
-      "dest": "api/diag.js"
+      "dest": "/api/diag.js"
     },
     {
       "src": "/api/(.*)",
-      "dest": "server.js"
+      "dest": "/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "public/$1"
+      "dest": "/public/$1"
     }
   ]
 }
