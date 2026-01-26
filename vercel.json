@@ -20,6 +20,10 @@
       "dest": "api/test.js"
     },
     {
+      "src": "/api/diag",
+      "dest": "api/diag.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "server.js"
     },
