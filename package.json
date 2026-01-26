@@ -19,8 +19,5 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "uuid": "^13.0.0"
-  },
-  "optionalDependencies": {
-    "better-sqlite3": "^12.6.2"
   }
 }

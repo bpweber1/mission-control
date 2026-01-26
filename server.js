@@ -72,6 +72,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Health check
+app.get('/api/health', async (req, res) => {
+  try {
+    const count = await db.get('SELECT COUNT(*) as count FROM tasks');
+    res.json({ status: 'ok', db: isNeon ? 'neon' : 'sqlite', tasks: count.count });
+  } catch (err) {
+    res.status(500).json({ status: 'error', error: err.message, db: isNeon ? 'neon' : 'sqlite' });
+  }
+});
+
 // Initialize database tables
 async function initDB() {
   await db.run(`
