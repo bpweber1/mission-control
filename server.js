@@ -36,7 +36,13 @@ if (isNeon) {
     }
   };
 } else {
-  const Database = require('better-sqlite3');
+  let Database;
+  try {
+    Database = require('better-sqlite3');
+  } catch (e) {
+    console.error('better-sqlite3 not available (expected on serverless). Set DATABASE_URL for Postgres.');
+    process.exit(1);
+  }
   const sqliteDb = new Database(path.join(__dirname, 'mission-control.db'));
   sqliteDb.pragma('journal_mode = WAL');
   
