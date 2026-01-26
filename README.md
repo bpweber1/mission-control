@@ -1,6 +1,6 @@
 # 🐕 Mission Control
 
-Kanban-style task management for multi-agent teams. Track tasks, manage projects, coordinate agents, and stay on top of everything.
+Kanban-style task management for multi-agent teams. Track tasks, manage projects, coordinate agents, and stay on top of everything...
 
 ## Features
 
