@@ -1,0 +1,24 @@
+{
+  "name": "mission-control",
+  "version": "1.0.0",
+  "description": "🐕 Agent Mission Control - Kanban task management for multi-agent teams",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "kanban",
+    "agents",
+    "task-management"
+  ],
+  "author": "Scooby & Brad",
+  "license": "MIT",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "better-sqlite3": "^12.6.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "uuid": "^13.0.0"
+  }
+}

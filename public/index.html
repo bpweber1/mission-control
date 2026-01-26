@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Control | AI Integration Hub</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="header-content">
+        <h1>Mission <strong>Control</strong></h1>
+        <div class="header-actions">
+          <select id="project-filter">
+            <option value="">All Projects</option>
+          </select>
+          <select id="agent-filter">
+            <option value="">All Agents</option>
+          </select>
+          <button id="notifications-btn" class="btn icon-btn" title="Notifications">
+            🔔 <span id="notif-count" class="badge hidden">0</span>
+          </button>
+          <button id="new-project-btn" class="btn">+ Project</button>
+          <button id="new-agent-btn" class="btn">+ Agent</button>
+          <button id="new-task-btn" class="btn primary">+ New Task</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="stats-bar" id="stats-bar"></div>
+
+    <main class="kanban-board">
+      <div class="column" data-status="backlog">
+        <div class="column-header">
+          <h2>📥 Backlog</h2>
+          <span class="count">0</span>
+        </div>
+        <div class="tasks"></div>
+      </div>
+
+      <div class="column" data-status="todo">
+        <div class="column-header">
+          <h2>📋 To Do</h2>
+          <span class="count">0</span>
+        </div>
+        <div class="tasks"></div>
+      </div>
+
+      <div class="column" data-status="in-progress">
+        <div class="column-header">
+          <h2>⚡ In Progress</h2>
+          <span class="count">0</span>
+        </div>
+        <div class="tasks"></div>
+      </div>
+
+      <div class="column" data-status="review">
+        <div class="column-header">
+          <h2>👀 Review</h2>
+          <span class="count">0</span>
+        </div>
+        <div class="tasks"></div>
+      </div>
+
+      <div class="column" data-status="done">
+        <div class="column-header">
+          <h2>✅ Done</h2>
+          <span class="count">0</span>
+        </div>
+        <div class="tasks"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Task Modal -->
+  <div id="task-modal" class="modal hidden">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="modal-title">New Task</h2>
+        <button class="close-btn" id="close-task-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body two-column">
+        <div class="main-section">
+          <form id="task-form">
+            <input type="hidden" id="task-id">
+            
+            <label>Title *</label>
+            <input type="text" id="task-title" required placeholder="What needs to be done?">
+            
+            <label>Description</label>
+            <textarea id="task-description" rows="4" placeholder="Add more details..."></textarea>
+            
+            <label>Tags</label>
+            <input type="text" id="task-tags" placeholder="bug, feature, urgent (comma separated)">
+            
+            <div class="form-row">
+              <div>
+                <label>Priority</label>
+                <select id="task-priority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                  <option value="urgent">🔥 Urgent</option>
+                </select>
+              </div>
+              <div>
+                <label>Assignee</label>
+                <select id="task-assignee">
+                  <option value="">Unassigned</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div>
+                <label>Project</label>
+                <select id="task-project">
+                  <option value="">No Project</option>
+                </select>
+              </div>
+              <div>
+                <label>Status</label>
+                <select id="task-status">
+                  <option value="backlog">Backlog</option>
+                  <option value="todo">To Do</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="review">Review</option>
+                  <option value="done">Done</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div>
+                <label>Due Date</label>
+                <input type="date" id="task-due-date">
+              </div>
+              <div></div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" class="btn danger" id="delete-btn">Delete</button>
+              <button type="button" class="btn" id="cancel-btn">Cancel</button>
+              <button type="submit" class="btn primary">Save Task</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="side-section" id="task-sidebar">
+          <!-- Comments Section -->
+          <div class="sidebar-section">
+            <h3>💬 Comments</h3>
+            <div id="comments-list" class="comments-list"></div>
+            <div class="add-comment">
+              <input type="text" id="comment-author" placeholder="Your name" value="Brad">
+              <textarea id="comment-content" placeholder="Add a comment..." rows="2"></textarea>
+              <button class="btn small primary" id="add-comment-btn">Post Comment</button>
+            </div>
+          </div>
+          
+          <!-- History Section -->
+          <div class="sidebar-section">
+            <h3>📜 Activity</h3>
+            <div id="history-list" class="history-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Modal -->
+  <div id="project-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="project-modal-title">New Project</h2>
+      <form id="project-form">
+        <input type="hidden" id="project-id">
+        
+        <label>Project Name *</label>
+        <input type="text" id="project-name" required placeholder="Enter project name">
+        
+        <label>Client</label>
+        <input type="text" id="project-client" placeholder="Client or company name">
+        
+        <label>Description</label>
+        <textarea id="project-description" rows="2" placeholder="Brief project description"></textarea>
+        
+        <label>Color</label>
+        <input type="color" id="project-color" value="#005EB8">
+        
+        <div class="form-actions">
+          <button type="button" class="btn danger" id="delete-project-btn">Delete</button>
+          <button type="button" class="btn" id="cancel-project-btn">Cancel</button>
+          <button type="submit" class="btn primary">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Agent Modal -->
+  <div id="agent-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="agent-modal-title">New Agent</h2>
+      <form id="agent-form">
+        <input type="hidden" id="agent-id">
+        
+        <label>Name *</label>
+        <input type="text" id="agent-name" required placeholder="Agent name">
+        
+        <label>Emoji</label>
+        <input type="text" id="agent-emoji" value="🤖" maxlength="4">
+        
+        <label>Role</label>
+        <input type="text" id="agent-role" placeholder="e.g., Development, Research, Automation">
+        
+        <div class="form-actions">
+          <button type="button" class="btn danger" id="delete-agent-btn">Delete</button>
+          <button type="button" class="btn" id="cancel-agent-btn">Cancel</button>
+          <button type="submit" class="btn primary">Save Agent</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notifications Panel -->
+  <div id="notifications-panel" class="side-panel hidden">
+    <div class="panel-header">
+      <h3>🔔 Notifications</h3>
+      <button class="btn small" id="mark-all-read">Mark all read</button>
+    </div>
+    <div id="notifications-list" class="notifications-list"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
