@@ -21,7 +21,7 @@ if (isNeon) {
       // Convert ? placeholders to $1, $2, etc for Postgres
       let idx = 0;
       const pgText = text.replace(/\?/g, () => `$${++idx}`);
-      const result = await sql.apply(null, [pgText, ...params]);
+      const result = await sql.query(pgText, params);
       return result;
     },
     async run(text, params = []) {
