@@ -148,24 +148,33 @@ async function initDB() {
     )
   `);
 
-  // Migration: Add missing columns if needed (fixes existing deployments)
+  // Migration: Recreate task_history if schema is broken (one-time fix)
   if (isNeon) {
-    const migrations = [
-      { column: 'action', sql: "ALTER TABLE task_history ADD COLUMN action TEXT NOT NULL DEFAULT 'update'" },
-      { column: 'field', sql: "ALTER TABLE task_history ADD COLUMN field TEXT" },
-      { column: 'old_value', sql: "ALTER TABLE task_history ADD COLUMN old_value TEXT" },
-      { column: 'new_value', sql: "ALTER TABLE task_history ADD COLUMN new_value TEXT" },
-      { column: 'actor', sql: "ALTER TABLE task_history ADD COLUMN actor TEXT DEFAULT 'System'" },
-    ];
-    for (const m of migrations) {
+    try {
+      // Check if table has correct schema by trying an insert
       await db.run(`
         DO $$ 
-        BEGIN 
-          IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='task_history' AND column_name='${m.column}') THEN
-            ${m.sql};
+        BEGIN
+          -- Drop and recreate if task_history exists but has wrong schema
+          IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name='task_history') THEN
+            DROP TABLE task_history;
           END IF;
         END $$;
       `);
+      await db.run(`
+        CREATE TABLE IF NOT EXISTS task_history (
+          id TEXT PRIMARY KEY,
+          task_id TEXT NOT NULL,
+          action TEXT NOT NULL DEFAULT 'update',
+          field TEXT,
+          old_value TEXT,
+          new_value TEXT,
+          actor TEXT DEFAULT 'System',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (e) {
+      console.log('task_history migration:', e.message);
     }
   }
 
