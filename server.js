@@ -148,16 +148,25 @@ async function initDB() {
     )
   `);
 
-  // Migration: Add action column if missing (fixes existing deployments)
+  // Migration: Add missing columns if needed (fixes existing deployments)
   if (isNeon) {
-    await db.run(`
-      DO $$ 
-      BEGIN 
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='task_history' AND column_name='action') THEN
-          ALTER TABLE task_history ADD COLUMN action TEXT NOT NULL DEFAULT 'update';
-        END IF;
-      END $$;
-    `);
+    const migrations = [
+      { column: 'action', sql: "ALTER TABLE task_history ADD COLUMN action TEXT NOT NULL DEFAULT 'update'" },
+      { column: 'field', sql: "ALTER TABLE task_history ADD COLUMN field TEXT" },
+      { column: 'old_value', sql: "ALTER TABLE task_history ADD COLUMN old_value TEXT" },
+      { column: 'new_value', sql: "ALTER TABLE task_history ADD COLUMN new_value TEXT" },
+      { column: 'actor', sql: "ALTER TABLE task_history ADD COLUMN actor TEXT DEFAULT 'System'" },
+    ];
+    for (const m of migrations) {
+      await db.run(`
+        DO $$ 
+        BEGIN 
+          IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='task_history' AND column_name='${m.column}') THEN
+            ${m.sql};
+          END IF;
+        END $$;
+      `);
+    }
   }
 
   await db.run(`
