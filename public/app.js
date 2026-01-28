@@ -81,6 +81,10 @@ async function loadStats() {
       <span class="stat-label">Total Tasks</span>
     </div>
     <div class="stat">
+      <span class="stat-value">${stats.byStatus.parked || 0}</span>
+      <span class="stat-label">🅿️ Parked</span>
+    </div>
+    <div class="stat">
       <span class="stat-value">${stats.byStatus.backlog || 0}</span>
       <span class="stat-label">Backlog</span>
     </div>

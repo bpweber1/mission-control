@@ -32,6 +32,14 @@
     <div class="stats-bar" id="stats-bar"></div>
 
     <main class="kanban-board">
+      <div class="column parked-column" data-status="parked">
+        <div class="column-header">
+          <h2>🅿️ Parking Lot</h2>
+          <span class="count">0</span>
+        </div>
+        <div class="tasks"></div>
+      </div>
+
       <div class="column" data-status="backlog">
         <div class="column-header">
           <h2>📥 Backlog</h2>
@@ -124,6 +132,7 @@
               <div>
                 <label>Status</label>
                 <select id="task-status">
+                  <option value="parked">🅿️ Parking Lot</option>
                   <option value="backlog">Backlog</option>
                   <option value="todo">To Do</option>
                   <option value="in-progress">In Progress</option>

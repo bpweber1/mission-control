@@ -27,6 +27,7 @@
   --text-muted: #9ca3af;
   
   /* Status Colors */
+  --status-parked: #9ca3af;
   --status-backlog: #6b7280;
   --status-todo: #3b82f6;
   --status-progress: #f59e0b;
@@ -307,11 +308,32 @@ header select option {
 }
 
 /* Column status colors */
+.column[data-status="parked"] .column-header { border-top: 3px solid var(--status-parked); border-radius: 12px 12px 0 0; }
 .column[data-status="backlog"] .column-header { border-top: 3px solid var(--status-backlog); border-radius: 12px 12px 0 0; }
 .column[data-status="todo"] .column-header { border-top: 3px solid var(--status-todo); border-radius: 12px 12px 0 0; }
 .column[data-status="in-progress"] .column-header { border-top: 3px solid var(--status-progress); border-radius: 12px 12px 0 0; }
 .column[data-status="review"] .column-header { border-top: 3px solid var(--status-review); border-radius: 12px 12px 0 0; }
 .column[data-status="done"] .column-header { border-top: 3px solid var(--status-done); border-radius: 12px 12px 0 0; }
+
+/* Parking Lot — visually muted to show items are on hold */
+.column.parked-column {
+  background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+  opacity: 0.9;
+}
+
+.column.parked-column .column-header h2 {
+  color: var(--text-muted);
+}
+
+.column.parked-column .task-card {
+  opacity: 0.75;
+  border-left-color: var(--status-parked);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+}
+
+.column.parked-column .task-card:hover {
+  opacity: 1;
+}
 
 .tasks {
   flex: 1;
