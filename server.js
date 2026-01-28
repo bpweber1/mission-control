@@ -148,6 +148,18 @@ async function initDB() {
     )
   `);
 
+  // Migration: Add action column if missing (fixes existing deployments)
+  if (isNeon) {
+    await db.run(`
+      DO $$ 
+      BEGIN 
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='task_history' AND column_name='action') THEN
+          ALTER TABLE task_history ADD COLUMN action TEXT NOT NULL DEFAULT 'update';
+        END IF;
+      END $$;
+    `);
+  }
+
   await db.run(`
     CREATE TABLE IF NOT EXISTS notifications (
       id TEXT PRIMARY KEY,
