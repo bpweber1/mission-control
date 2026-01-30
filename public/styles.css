@@ -866,3 +866,21 @@ header select option {
   color: var(--text-muted);
   font-size: 0.875rem;
 }
+
+/* Monitor Button */
+.monitor-btn {
+  background: linear-gradient(135deg, #ff6b4a, #ff4757) !important;
+  color: white !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.monitor-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 75, 87, 0.3);
+}
